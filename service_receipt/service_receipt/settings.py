@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from service_receipt.config import DJANGO_SECRET_KEY
+import config as c
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = DJANGO_SECRET_KEY
+SECRET_KEY = c.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -61,8 +61,12 @@ WSGI_APPLICATION = 'service_receipt.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': c.DB_NAME,
+        'USER': c.DB_USER,
+        'PASSWORD': c.DB_PASS,
+        'HOST': c.DB_HOST,
+        'PORT': c.DB_PORT,
     }
 }
 

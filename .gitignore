@@ -2,3 +2,4 @@
 .idea/
 *.exe
 /service_receipt/.env
+/service_receipt/app_receipt/db/

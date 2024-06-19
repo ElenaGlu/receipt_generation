@@ -45,9 +45,15 @@ def printer(restaurant):
 @pytest.fixture()
 def order(printer):
     order = [
+        {
+            "id": 2,
+            "title": "order1",
+            "status": "CREATE",
+            "printer_id": printer[0].id
+        }
 
     ]
     temporary = []
     for obj in order:
-        temporary.append(models.Order())
+        temporary.append(models.Order(**obj))
     return models.Order.objects.bulk_create(temporary)

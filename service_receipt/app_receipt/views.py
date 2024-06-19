@@ -5,8 +5,10 @@ from django.http import HttpRequest, HttpResponse
 from app_receipt.app_services import OrderReceipt
 
 
-def create_receipt_request(request: HttpRequest) -> HttpResponse:
+def create_order_for_receipt(request: HttpRequest) -> HttpResponse:
+
     """
+    Create an order for a receipt
     :param request: JSON object containing keys - title, restaurant
     :return: "created" (201) response code
     :raises

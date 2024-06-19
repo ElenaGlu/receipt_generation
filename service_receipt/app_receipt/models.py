@@ -8,6 +8,7 @@ class Restaurant(models.Model):
 class Printer(models.Model):
     title = models.CharField(max_length=100)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    print_queue = models.IntegerField(default=0)
 
 
 STATUS = {
@@ -19,6 +20,5 @@ STATUS = {
 
 class Order(models.Model):
     title = models.CharField(max_length=100)
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     status = models.CharField(max_length=7, choices=STATUS, default='CREATE')
-    # printer = models.ForeignKey(Printer, on_delete=models.CASCADE)
+    printer = models.ForeignKey(Printer, on_delete=models.CASCADE)

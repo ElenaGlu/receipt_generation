@@ -25,9 +25,9 @@ services:
     restart: unless-stopped
     ports:
       - "6378:6379"
-  wkhtmltopdf:
-    build:
-      context: .
+#  wkhtmltopdf:
+#    build:
+#      context: .
 volumes:
   postgres_data:
 secrets:

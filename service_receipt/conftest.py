@@ -50,6 +50,12 @@ def order(printer):
             "title": "order1",
             "status": "CREATE",
             "printer_id": printer[0].id
+        },
+        {
+            "id": 3,
+            "title": "order1",
+            "status": "READY",
+            "printer_id": printer[0].id
         }
 
     ]

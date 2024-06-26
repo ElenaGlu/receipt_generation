@@ -1,10 +1,11 @@
+import os
 from typing import Dict
-from django.http import HttpResponse
 from app_receipt.models import Order, Restaurant, Printer
 from django.db.models import F
 
 from app_receipt.tasks import generate_PDF_task
 from exceptions import AppError, ErrorType
+import zipfile
 
 
 class OrderReceipt:
@@ -43,22 +44,16 @@ class OrderReceipt:
             )
 
     @staticmethod
-    def give_list_receipt(request: Dict[str, str]):
+    def give_list_receipt(request: Dict[str, int]):
         """
         Return a list of receipts ready to be printed on a specific printer.
         :param request: dict containing keys - printer_id
         :raises AppError: there are no receipts for printing or the printer does not exist
         """
         printer_id = request['printer_id']
-        receipts = list(Order.objects.filter(printer=printer_id, status='READY').values('title'))
+        receipts = list(Order.objects.filter(printer_id=printer_id, status='READY').values('title'))
         if receipts:
-            for d in receipts:
-                obj = d['title']
-                file_name = f'{obj}.pdf'
-                with open(f'/home/elena/lena/receipt_generation/service_receipt/app_receipt/media/PDF/{file_name}',
-                          'rb') as pdf:
-                    response = HttpResponse(pdf.read(), content_type='application/pdf')
-                    response['Content-Disposition'] = filename = file_name
+            files = [d['title'] for d in receipts]
         else:
             raise AppError(
                 {
@@ -66,3 +61,23 @@ class OrderReceipt:
                     'description': 'there are no receipts for printing or the printer does not exist'
                 }
             )
+        buffer = OrderReceipt.download_files(files)
+        for title in files:
+            Order.objects.filter(title=title).update(status='RELEASE')
+        return buffer
+
+
+    @staticmethod
+    def download_files(files_to_zip):
+        zip_name = 'receipt.zip'
+        zf = zipfile.ZipFile(zip_name, 'w')
+        for file in files_to_zip:
+            file = f'{file}.pdf'
+            file_path = os.path.join('/home/elena/lena/receipt_generation/service_receipt/app_receipt/media/PDF/', file)
+            zf.write(file_path)
+        zf.close()
+        file = open(zip_name, 'rb').read()
+        return file
+
+
+

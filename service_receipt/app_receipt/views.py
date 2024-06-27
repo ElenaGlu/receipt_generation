@@ -26,9 +26,9 @@ def give_receipt_to_printer(request: HttpRequest) -> HttpResponse:
     :return: "OK" (200) response code
     :raises
     """
-    if request.method == "POST":
+    if request.method == "GET":
         obj = OrderReceipt()
-        buffer = obj.give_list_receipt(json.loads(request.body))
-        response = HttpResponse(buffer, content_type='application/zip')
-        response['Content-Disposition'] = 'attachment;filename="{0}"'.format('receipt.zip')
+        zip_file_receipts, zip_name = obj.give_list_receipt(request.GET.get('printer_id'))
+        response = HttpResponse(zip_file_receipts, content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename=' + zip_name
         return response

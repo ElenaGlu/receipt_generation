@@ -16,6 +16,7 @@ class ErrorType:
         'status_code': 400,
         'summary': 'Bad Request',
     }
+
     RECEIPT_ERROR = {
         'status_code': 404,
         'summary': 'Not found',

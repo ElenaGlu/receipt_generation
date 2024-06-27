@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   db:
     image: 'postgres:16-alpine'
@@ -25,9 +24,6 @@ services:
     restart: unless-stopped
     ports:
       - "6378:6379"
-#  wkhtmltopdf:
-#    build:
-#      context: .
 volumes:
   postgres_data:
 secrets:

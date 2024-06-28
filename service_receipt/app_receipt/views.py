@@ -15,7 +15,7 @@ def create_order_for_receipt(request: HttpRequest) -> HttpResponse:
     """
     if request.method == "POST":
         obj = OrderReceipt()
-        obj.add_order(json.loads(request.body))
+        obj.create_order(json.loads(request.body))
         return HttpResponse(status=201)
 
 
@@ -24,7 +24,7 @@ def give_receipt_to_printer(request: HttpRequest) -> HttpResponse:
     Return a list of receipts ready to be printed on a specific printer.
     :param request: JSON object containing keys - printer_id
     :return: "OK" (200) response code
-    :raises
+    :raises AppError: there are no receipts for printing or the printer does not exist
     """
     if request.method == "GET":
         obj = OrderReceipt()

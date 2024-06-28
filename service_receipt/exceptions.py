@@ -21,3 +21,13 @@ class ErrorType:
         'status_code': 404,
         'summary': 'Not found',
     }
+
+    PDF_ERROR = {
+        'status_code': 400,
+        'summary': 'Bad Request',
+    }
+
+    ARCHIVE_ERROR = {
+        'status_code': 400,
+        'summary': 'Bad Request',
+    }

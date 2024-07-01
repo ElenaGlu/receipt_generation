@@ -29,6 +29,6 @@ def give_receipt_to_printer(request: HttpRequest) -> HttpResponse:
     if request.method == "GET":
         obj = OrderReceipt()
         zip_file_receipts, zip_name = obj.give_list_receipt(request.GET.get('printer_id'))
-        response = HttpResponse(zip_file_receipts, content_type='application/zip')
+        response = HttpResponse(zip_file_receipts, content_type='application/zip', status=200)
         response['Content-Disposition'] = 'attachment; filename=' + zip_name
         return response

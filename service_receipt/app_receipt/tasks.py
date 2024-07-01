@@ -1,10 +1,11 @@
+import os
 from typing import Dict
 
 from celery import shared_task
 from django.template.loader import get_template
 import pdfkit
 
-from app_receipt.models import Order
+from app_receipt.models import Order, Statuses
 from exceptions import AppError, ErrorType
 
 
@@ -31,12 +32,13 @@ def generate_PDF_task(request: Dict[str, str]) -> Dict[str, bool]:
     try:
         template = get_template("pdf_template.html")
         html = template.render(request)
+        file_path = os.path.join('app_receipt/media/PDF/', f'{title}.pdf')
         pdfkit.from_string(
             html,
-            f'/home/elena/lena/receipt_generation/service_receipt/app_receipt/media/PDF/{title}.pdf',
+            file_path,
             options=options
             )
-        Order.objects.filter(title=title).update(status='READY')
+        Order.objects.filter(title=title).update(status=Statuses.ready)
         return {"status": True}
     except Exception:
         raise AppError(

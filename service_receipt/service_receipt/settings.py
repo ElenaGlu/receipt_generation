@@ -108,5 +108,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery settings
-CELERY_BROKER_URL = "redis://localhost:6378"
-CELERY_RESULT_BACKEND = "redis://localhost:6378"
+CELERY_BROKER_URL = c.CELERY_BROKER_URL
+CELERY_RESULT_BACKEND = c.CELERY_RESULT_BACKEND

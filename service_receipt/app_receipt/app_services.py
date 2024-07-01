@@ -1,7 +1,7 @@
 import os
 import datetime
 from typing import Dict, List, Tuple
-from app_receipt.models import Order, Restaurant, Printer
+from app_receipt.models import Order, Restaurant, Printer, Statuses
 from django.db.models import F
 
 from app_receipt.tasks import generate_PDF_task
@@ -23,9 +23,9 @@ class OrderReceipt:
         restaurant = request['restaurant']
         if not Order.objects.filter(title=title):
             restaurant_id = Restaurant.objects.filter(title=restaurant).first().id
-            printer = list(Printer.objects.filter(restaurant_id=restaurant_id).values('id', 'print_queue'))
-            if printer:
-                choose_printer = (min(printer, key=lambda x: x['print_queue']))['id']
+            printers = list(Printer.objects.filter(restaurant_id=restaurant_id).values('id', 'print_queue'))
+            if printers:
+                choose_printer = (min(printers, key=lambda x: x['print_queue']))['id']
                 Order.objects.create(title=title, printer_id=choose_printer)
                 Printer.objects.filter(id=choose_printer).update(print_queue=F("print_queue") + 1)
                 generate_PDF_task.delay(request)
@@ -51,11 +51,14 @@ class OrderReceipt:
         :param printer_id: printer_id
         :raises AppError: there are no receipts for printing or the printer does not exist
         """
-        receipts = Order.objects.filter(printer_id=printer_id, status='READY')
-        receipts_values = list(receipts.values('title'))
-        if receipts:
-            title_receipts = [d['title'] for d in receipts_values]
-            quantity_receipts = len(title_receipts)
+        orders = Order.objects.filter(printer_id=printer_id, status=Statuses.ready)
+        title_orders = orders.values_list('title', flat=True)
+        if title_orders:
+            quantity_receipts = len(title_orders)
+            zip_file_receipts, zip_name = OrderReceipt.download_files(title_orders, printer_id)
+            orders.update(status=Statuses.release)
+            Printer.objects.filter(id=printer_id).update(print_queue=F("print_queue") - quantity_receipts)
+            return zip_file_receipts, zip_name
         else:
             raise AppError(
                 {
@@ -63,10 +66,6 @@ class OrderReceipt:
                     'description': 'there are no receipts for printing or the printer does not exist'
                 }
             )
-        zip_file_receipts, zip_name = OrderReceipt.download_files(title_receipts, printer_id)
-        receipts.update(status='RELEASE')
-        Printer.objects.filter(id=printer_id).update(print_queue=F("print_queue") - quantity_receipts)
-        return zip_file_receipts, zip_name
 
     @staticmethod
     def download_files(files_to_zip: List[str], printer_id: int) -> Tuple[bytes, str]:

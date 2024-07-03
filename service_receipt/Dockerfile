@@ -1,21 +1,21 @@
 FROM python:3.12
 
+ENV POETRY_VIRTUALENVS_CREATE=false
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    wkhtmltopdf \
-    && apt-get -y clean
-
 WORKDIR /usr/src/app
-
-COPY ./requirements.txt /usr/src/app
-
-RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /usr/src/app/
 
-EXPOSE 8000
+RUN apt-get update && apt-get install -y wkhtmltopdf
+
+RUN python -m pip install --upgrade pip
+RUN pip install --upgrade poetry && poetry --version
+
+RUN poetry install
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+
+

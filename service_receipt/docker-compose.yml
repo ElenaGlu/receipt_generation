@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - /home/elena/lena/receipt_generation/service_receipt/app_receipt/media/PDF:/usr/src/app/app_receipt/media/PDF
     ports:
       - "8080:8000"
     env_file:
@@ -33,6 +35,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - /home/elena/lena/receipt_generation/service_receipt/app_receipt/media/PDF:/usr/src/app/app_receipt/media/PDF
     container_name: celery_worker
     command: celery -A service_receipt worker -l info
     env_file:
@@ -50,4 +54,3 @@ volumes:
 secrets:
   db-password:
     file: app_receipt/db/password.txt
-

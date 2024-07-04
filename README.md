@@ -9,4 +9,4 @@
 
 ### Технологии:
 
-Python3, Django, PostgreSQL, Celery, Redis, Poetry, Docker-compose, Pytest
+Python3, Django, PostgreSQL, Celery, Redis, Poetry, Docker, Pytest

@@ -9,4 +9,19 @@
 
 ### Технологии:
 
-Python3, Django, PostgreSQL, Celery, Redis, Poetry, Docker, Pytest
+Python3, Django, PostgreSQL, Celery, Redis, Poetry, Docker Compose, Pytest
+
+### Запуск проекта на локальной машине:
+
+- Клонировать репозиторий:
+```
+https://github.com/ElenaGlu/receipt_generation.git
+cd service_receipt
+```
+
+### Запустите проект:
+
+```
+sudo docker compose up --build
+```
+

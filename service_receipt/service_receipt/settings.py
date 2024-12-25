@@ -22,6 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app_receipt',
+    'rest_framework',
+    'drf_yasg',
+    'rest_framework_swagger',
+
 ]
 
 MIDDLEWARE = [
@@ -110,3 +114,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Celery settings
 CELERY_BROKER_URL = c.CELERY_BROKER_URL
 CELERY_RESULT_BACKEND = c.CELERY_RESULT_BACKEND
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Basic': {
+            'type': 'basic'
+      },
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}

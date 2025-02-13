@@ -7,10 +7,6 @@ class AppError(AppExceptions):
 
 
 class ErrorType:
-    PRINTER_ERROR = {
-        'status_code': 409,
-        'summary': 'Conflict',
-    }
 
     ORDER_ERROR = {
         'status_code': 400,

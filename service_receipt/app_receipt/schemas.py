@@ -3,30 +3,27 @@ from drf_yasg.utils import swagger_auto_schema
 
 CREATE_RECEIPT = (
     swagger_auto_schema(
-        operation_summary='create data for receipt',
+        operation_summary='create a receipt',
         operation_description='',
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
                 'title': openapi.Schema(
                     type=openapi.TYPE_STRING,
-                    description=''
+                    description='the unique identification of the receipt'
                 ),
                 'restaurant': openapi.Schema(
                     type=openapi.TYPE_STRING,
-                    description=''
+                    description='restaurant name'
                 ),
             },
         ),
         responses={
             201: openapi.Response(
-                'the request for creating a receipt has been created'
-            ),
-            409: openapi.Response(
-                'This restaurant does not have a printer',
+                'successful operation'
             ),
             400: openapi.Response(
-                'Order with this header has already been created',
+                'invalid input',
             ),
         },
     ),

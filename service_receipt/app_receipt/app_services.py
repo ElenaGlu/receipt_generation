@@ -22,25 +22,33 @@ class OrderReceipt:
         title = request['title']
         restaurant = request['restaurant']
         if not Order.objects.filter(title=title):
-            restaurant_id = Restaurant.objects.filter(title=restaurant).first().id
-            printers = list(Printer.objects.filter(restaurant_id=restaurant_id).values('id', 'print_queue'))
-            if printers:
-                choose_printer = (min(printers, key=lambda x: x['print_queue']))['id']
-                Order.objects.create(title=title, printer_id=choose_printer)
-                Printer.objects.filter(id=choose_printer).update(print_queue=F("print_queue") + 1)
-                generate_PDF_task.delay(request)
+            restaurant = Restaurant.objects.filter(title=restaurant).first()
+            if restaurant:
+                printers = list(Printer.objects.filter(restaurant_id=restaurant.id).values('id', 'print_queue'))
+                if printers:
+                    choose_printer = (min(printers, key=lambda x: x['print_queue']))['id']
+                    Order.objects.create(title=title, printer_id=choose_printer)
+                    Printer.objects.filter(id=choose_printer).update(print_queue=F("print_queue") + 1)
+                    generate_PDF_task.delay(request)
+                else:
+                    raise AppError(
+                        {
+                            'error_type': ErrorType.ORDER_ERROR,
+                            'description': 'this restaurant does not have a printer'
+                        }
+                    )
             else:
                 raise AppError(
                     {
-                        'error_type': ErrorType.PRINTER_ERROR,
-                        'description': 'This restaurant does not have a printer'
+                        'error_type': ErrorType.ORDER_ERROR,
+                        'description': 'the restaurant does not exist'
                     }
                 )
         else:
             raise AppError(
                 {
                     'error_type': ErrorType.ORDER_ERROR,
-                    'description': 'Order with this header has already been created'
+                    'description': 'it is forbidden to duplicate the receipt'
                 }
             )
 

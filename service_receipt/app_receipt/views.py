@@ -14,7 +14,7 @@ from .schemas import CREATE_RECEIPT, GET_RECEIPT
 @method_decorator(*CREATE_RECEIPT)
 @method_decorator(*GET_RECEIPT)
 class Receipt(viewsets.GenericViewSet):
-    @action(methods=['POST'], detail=False, url_path='create_receipt')
+    @action(methods=['POST'], detail=False, url_path='create')
     def create_receipt(self, request: Request) -> Response:
         """
         Create an order for a receipt.

@@ -7,9 +7,8 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="API",
+      title="API Receipt generation",
       default_version='v1',
-      description="description"
    ),
    public=True,
 )

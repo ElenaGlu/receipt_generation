@@ -1,6 +1,7 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+
 CREATE_RECEIPT = (
     swagger_auto_schema(
         operation_summary='create a receipt',
@@ -10,7 +11,7 @@ CREATE_RECEIPT = (
             properties={
                 'title': openapi.Schema(
                     type=openapi.TYPE_STRING,
-                    description='the unique identification of the receipt'
+                    description='the unique name of the receipt'
                 ),
                 'restaurant': openapi.Schema(
                     type=openapi.TYPE_STRING,
@@ -26,32 +27,29 @@ CREATE_RECEIPT = (
                 'invalid input',
             ),
         },
-    ),
+        tags=['base']),
     'create_receipt',
 )
 GET_RECEIPT = (
     swagger_auto_schema(
-        operation_summary='get receipt',
+        operation_summary='get a receipt',
         operation_description='',
         manual_parameters=[
-                openapi.Parameter(
-                    name='printer_id', in_=openapi.IN_QUERY,
-                    type=openapi.TYPE_INTEGER,
-                    description='printer_id',
-                    required=True,
-                ),
-            ],
+            openapi.Parameter(
+                name='printer_id', in_=openapi.IN_QUERY,
+                type=openapi.TYPE_INTEGER,
+                description='the unique identifier of the printer',
+                required=True,
+            ),
+        ],
         responses={
             200: openapi.Response(
-                'Return a list of receipts ready to be printed on a specific printer'
-            ),
-            404: openapi.Response(
-                'there are no receipts for printing or the printer does not exist',
+                'successful operation'
             ),
             400: openapi.Response(
-                'archive creation error',
+                'invalid input',
             ),
         },
-    ),
+        tags=['base']),
     'get_receipt'
 )

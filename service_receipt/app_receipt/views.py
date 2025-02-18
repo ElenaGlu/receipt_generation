@@ -7,7 +7,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from .app_services import OrderReceipt
-
 from .schemas import CREATE_RECEIPT, GET_RECEIPT
 
 
@@ -27,7 +26,7 @@ class Receipt(viewsets.GenericViewSet):
         obj.create_order(json.loads(request.body))
         return Response(status=status.HTTP_201_CREATED)
 
-    @action(methods=['GET'], detail=False)
+    @action(methods=['GET'], detail=False, url_path='get')
     def get_receipt(self, request: Request) -> Response:
         """
             Return a list of receipts ready to be printed on a specific printer.

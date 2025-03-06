@@ -34,7 +34,7 @@ Python3, Django, PostgreSQL, Celery, Redis, Poetry, Docker Compose, Pytest, Swag
 1.	Анализ требований (схема работы сервиса, дока в swagger)
 2.	Создание тестовой документации (тест-кейсы - https://disk.yandex.ru/i/Ba7Fsb-t9Iu6PA )
 3.	Выполнение тестов (коллекция запросов в Postman - https://documenter.getpostman.com/view/34882852/2sAYdkFo5y )
-4.	Фиксация дефектов – оформление баг-репортов (Yougile - https://ru.yougile.com/team/b1a16b295204/receipt_generation#MP-8 )
+4.	Фиксация дефектов – оформление баг-репортов (Yougile - https://ru.yougile.com/board/c7iqym8ou71o)
 
 При тестировании использовались техники тест-дизайна: - разбиение на классы эквивалентности, анализ граничных значений. 
 

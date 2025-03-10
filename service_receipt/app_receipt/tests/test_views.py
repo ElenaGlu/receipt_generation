@@ -5,15 +5,16 @@ from django.urls import reverse
 
 
 @pytest.mark.django_db
-def test_create_order_for_receipt(client, order):
-    url = reverse('create_order_for_receipt')
+def test_create(client, order):
+    # url = reverse('api-create')
+    endpoint = '/api/create/'
     order_info = json.dumps(
         {
-            'title': 'ABC',
-            'restaurant': 'restaurant-A',
+            'title': '1239',
+            'restaurant': 'group-A',
         }
     )
-    response = client.post(url, order_info, content_type='application/json')
+    response = client.post(endpoint, order_info, content_type='application/json')
     assert response.status_code == 201
 
 

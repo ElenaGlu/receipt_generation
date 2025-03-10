@@ -53,7 +53,7 @@ class OrderReceipt:
             )
 
     @staticmethod
-    def give_list_receipt(printer_id: int) -> Tuple[bytes, str]:
+    def give_list_receipt(printer_id: int) -> str:
         """
         Return a list of receipts ready to be printed on a specific printer.
         :param printer_id: printer_id
@@ -63,10 +63,10 @@ class OrderReceipt:
         title_orders = orders.values_list('title', flat=True)
         if title_orders:
             quantity_receipts = len(title_orders)
-            zip_file_receipts, zip_name = OrderReceipt.download_files(title_orders, printer_id)
+            zip_name = OrderReceipt.download_files(title_orders, printer_id)
             orders.update(status=Statuses.release)
             Printer.objects.filter(id=printer_id).update(print_queue=F("print_queue") - quantity_receipts)
-            return zip_file_receipts, zip_name
+            return zip_name
         else:
             raise AppError(
                 {
@@ -76,7 +76,7 @@ class OrderReceipt:
             )
 
     @staticmethod
-    def download_files(files_to_zip: List[str], printer_id: int) -> Tuple[bytes, str]:
+    def download_files(files_to_zip: List[str], printer_id: int) -> str:
         """
         Compress and archive PDF to ZIP file.
         :param printer_id: printer_id
@@ -92,8 +92,8 @@ class OrderReceipt:
                 file_path = os.path.join('app_receipt/media/PDF/', file)
                 zf.write(file_path)
             zf.close()
-            zip_file_receipts = open(f'app_receipt/media/PDF/{zip_name}', 'rb').read()
-            return zip_file_receipts, zip_name
+            # zip_file_receipts = open(f'app_receipt/media/PDF/{zip_name}', 'rb').read()
+            return zip_name
         except Exception:
             raise AppError(
                 {

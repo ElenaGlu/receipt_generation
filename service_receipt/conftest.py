@@ -1,14 +1,16 @@
 import pytest
 
-from app_receipt import models
+from .app_receipt import models
 
 
 @pytest.fixture()
 def restaurant():
     restaurant = [
-        "restaurant-A",
-        "restaurant-B",
-        "restaurant-C"
+        "group-A",
+        "group-B",
+        "group-C",
+        "group-D",
+        "group-E"
     ]
     temporary = []
     for idx, obj in enumerate(restaurant):
@@ -34,6 +36,16 @@ def printer(restaurant):
             "title": "printer_B1",
             "restaurant_id": restaurant[1].id
         },
+        {
+            "id": 4,
+            "title": "printer_C1",
+            "restaurant_id": restaurant[2].id
+        },
+        {
+            "id": 5,
+            "title": "printer_D1",
+            "restaurant_id": restaurant[3].id
+        },
 
     ]
     temporary = []
@@ -47,13 +59,13 @@ def order(printer):
     order = [
         {
             "id": 2,
-            "title": "order1",
+            "title": "0011",
             "status": "CREATE",
             "printer_id": printer[0].id
         },
         {
             "id": 3,
-            "title": "order1",
+            "title": "0022",
             "status": "READY",
             "printer_id": printer[0].id
         }

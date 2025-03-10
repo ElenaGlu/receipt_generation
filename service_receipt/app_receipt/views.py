@@ -1,5 +1,6 @@
 import json
 
+from django.http import FileResponse
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -27,15 +28,16 @@ class Receipt(viewsets.GenericViewSet):
         return Response(status=status.HTTP_201_CREATED)
 
     @action(methods=['GET'], detail=False, url_path='get')
-    def get_receipt(self, request: Request) -> Response:
+    def get_receipt(self, request: Request) -> FileResponse:
         """
             Return a list of receipts ready to be printed on a specific printer.
             :param request: JSON object containing keys - printer_id
-            :return: "OK" (200) response code
+            :return: zip-file
             :raises AppError: there are no receipts for printing or the printer does not exist
             """
         obj = OrderReceipt()
-        zip_file_receipts, zip_name = obj.give_list_receipt(request.GET.get('printer_id'))
-        response = Response(zip_file_receipts, content_type='application/zip', status=200)
+        zip_name = obj.give_list_receipt(request.GET.get('printer_id'))
+        zip_file_receipts = open(f'app_receipt/media/PDF/{zip_name}', 'rb').read()
+        response = FileResponse(zip_file_receipts, as_attachment=True, content_type='application/zip')
         response['Content-Disposition'] = 'attachment; filename=' + zip_name
-        return Response(status=status.HTTP_200_OK)
+        return response

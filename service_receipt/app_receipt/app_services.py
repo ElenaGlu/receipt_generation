@@ -1,6 +1,6 @@
 import os
 import datetime
-from typing import Dict, List, Tuple
+from typing import Dict, List
 from app_receipt.models import Order, Restaurant, Printer, Statuses
 from django.db.models import F
 

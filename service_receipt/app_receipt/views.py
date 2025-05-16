@@ -1,5 +1,3 @@
-import json
-
 from django.http import FileResponse
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets, status
@@ -9,6 +7,7 @@ from rest_framework.response import Response
 
 from .app_services import OrderReceipt
 from .schemas import CREATE_RECEIPT, GET_RECEIPT
+from .serializers import CreateReceiptSerializer, GetReceiptSerializer
 
 
 @method_decorator(*CREATE_RECEIPT)
@@ -23,20 +22,27 @@ class Receipt(viewsets.GenericViewSet):
         :raises AppError: This restaurant does not have a printer
         :raises AppError: Order with this header has already been created
         """
+        serializer = CreateReceiptSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         obj = OrderReceipt()
-        obj.create_order(json.loads(request.body))
+        obj.create_order(serializer.validated_data)
         return Response(status=status.HTTP_201_CREATED)
 
     @action(methods=['GET'], detail=False, url_path='get')
     def get_receipt(self, request: Request) -> FileResponse:
         """
-            Return a list of receipts ready to be printed on a specific printer.
-            :param request: JSON object containing keys - printer_id
-            :return: zip-file
-            :raises AppError: there are no receipts for printing or the printer does not exist
-            """
+        Return a list of receipts ready to be printed on a specific printer.
+        :param request: JSON object containing keys - printer_id
+        :return: zip-file
+        :raises AppError: there are no receipts for printing or the printer does not exist
+        """
+        serializer = GetReceiptSerializer(data=request.GET)
+        serializer.is_valid(raise_exception=True)
+
         obj = OrderReceipt()
-        zip_name = obj.give_list_receipt(request.GET.get('printer_id'))
+        zip_name = obj.give_list_receipt(serializer.validated_data['printer_id'])
+
         zip_file_receipts = open(f'app_receipt/media/PDF/{zip_name}', 'rb').read()
         response = FileResponse(zip_file_receipts, as_attachment=True, content_type='application/zip')
         response['Content-Disposition'] = 'attachment; filename=' + zip_name

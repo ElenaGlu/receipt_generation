@@ -14,7 +14,7 @@
 
 ### Технологии:
 
-Python3, Django, PostgreSQL, Celery, Redis, Poetry, Docker Compose, Pytest, Swagger, Postman, DBeaver
+Python3, Django, PostgreSQL, Celery, Redis, Poetry, Docker Compose, Pytest, Swagger, Postman
 
 ### Тестирование:
 1. На основании схемы работы сервиса была создана документация для тестирования.

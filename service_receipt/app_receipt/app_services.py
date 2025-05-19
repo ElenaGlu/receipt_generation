@@ -1,6 +1,6 @@
 import os
 import datetime
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from app_receipt.models import Order, Restaurant, Printer, Statuses
 from django.db.models import F
 
@@ -53,7 +53,7 @@ class OrderReceipt:
             )
 
     @staticmethod
-    def give_list_receipt(printer_id: int) -> str:
+    def give_list_receipt(printer_id: int) -> tuple[str, bytes]:
         """
         Return a list of receipts ready to be printed on a specific printer.
         :param printer_id: printer_id
@@ -63,10 +63,10 @@ class OrderReceipt:
         title_orders = orders.values_list('title', flat=True)
         if title_orders:
             quantity_receipts = len(title_orders)
-            zip_name = OrderReceipt.download_files(title_orders, printer_id)
+            zip_name, zip_file_receipts = OrderReceipt.download_files(title_orders, printer_id)
             orders.update(status=Statuses.release)
             Printer.objects.filter(id=printer_id).update(print_queue=F("print_queue") - quantity_receipts)
-            return zip_name
+            return zip_name, zip_file_receipts
         else:
             raise AppError(
                 {
@@ -76,7 +76,7 @@ class OrderReceipt:
             )
 
     @staticmethod
-    def download_files(files_to_zip: List[str], printer_id: int) -> str:
+    def download_files(files_to_zip: List[str], printer_id: int) -> tuple[str, bytes]:
         """
         Compress and archive PDF to ZIP file.
         :param printer_id: printer_id
@@ -92,8 +92,8 @@ class OrderReceipt:
                 file_path = os.path.join('app_receipt/media/PDF/', file)
                 zf.write(file_path)
             zf.close()
-            # zip_file_receipts = open(f'app_receipt/media/PDF/{zip_name}', 'rb').read()
-            return zip_name
+            zip_file_receipts = open(f'app_receipt/media/PDF/{zip_name}', 'rb').read()
+            return zip_name, zip_file_receipts
         except Exception:
             raise AppError(
                 {

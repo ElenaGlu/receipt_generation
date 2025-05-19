@@ -41,9 +41,7 @@ class Receipt(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         obj = OrderReceipt()
-        zip_name = obj.give_list_receipt(serializer.validated_data['printer_id'])
-
-        zip_file_receipts = open(f'app_receipt/media/PDF/{zip_name}', 'rb').read()
+        zip_name, zip_file_receipts = obj.give_list_receipt(serializer.validated_data['printer_id'])
         response = FileResponse(zip_file_receipts, as_attachment=True, content_type='application/zip')
         response['Content-Disposition'] = 'attachment; filename=' + zip_name
         return response

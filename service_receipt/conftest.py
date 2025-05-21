@@ -1,6 +1,12 @@
 import pytest
 
 from app_receipt import models
+from rest_framework.test import APIClient
+
+
+@pytest.fixture
+def api_client():
+    return APIClient()
 
 
 @pytest.fixture()
@@ -24,34 +30,37 @@ def printer(restaurant):
         {
             "id": 1,
             "title": "printer_A1",
-            "restaurant_id": restaurant[0].id
+            "restaurant_id": restaurant[0].id,
+            "print_queue": 1
         },
         {
             "id": 2,
             "title": "printer_A2",
-            "restaurant_id": restaurant[0].id
+            "restaurant_id": restaurant[0].id,
+            "print_queue": 2
         },
         {
             "id": 3,
             "title": "printer_B1",
-            "restaurant_id": restaurant[1].id
+            "restaurant_id": restaurant[1].id,
+            "print_queue": 0
         },
         {
             "id": 4,
             "title": "printer_C1",
-            "restaurant_id": restaurant[2].id
+            "restaurant_id": restaurant[2].id,
+            "print_queue": 0
         },
         {
             "id": 5,
             "title": "printer_D1",
-            "restaurant_id": restaurant[3].id
+            "restaurant_id": restaurant[3].id,
+            "print_queue": 0
         },
 
     ]
-    temporary = []
-    for obj in printer:
-        temporary.append(models.Printer(**obj))
-    return models.Printer.objects.bulk_create(temporary)
+    temp = [models.Printer(**obj) for obj in printer]
+    return models.Printer.objects.bulk_create(temp)
 
 
 @pytest.fixture()
@@ -65,13 +74,11 @@ def order(printer):
         },
         {
             "id": 3,
-            "title": "0022",
+            "title": "1239",
             "status": "READY",
             "printer_id": printer[0].id
         }
 
     ]
-    temporary = []
-    for obj in order:
-        temporary.append(models.Order(**obj))
-    return models.Order.objects.bulk_create(temporary)
+    temp = [models.Order(**obj) for obj in order]
+    return models.Order.objects.bulk_create(temp)

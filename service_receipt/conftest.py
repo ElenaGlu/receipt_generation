@@ -9,7 +9,7 @@ def api_client():
     return APIClient()
 
 
-@pytest.fixture()
+@pytest.fixture
 def restaurant():
     restaurant = [
         "group-A",
@@ -24,7 +24,7 @@ def restaurant():
     return models.Restaurant.objects.bulk_create(temporary)
 
 
-@pytest.fixture()
+@pytest.fixture
 def printer(restaurant):
     printer = [
         {
@@ -63,7 +63,7 @@ def printer(restaurant):
     return models.Printer.objects.bulk_create(temp)
 
 
-@pytest.fixture()
+@pytest.fixture
 def order(printer):
     order = [
         {

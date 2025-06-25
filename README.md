@@ -39,6 +39,8 @@ Python3, Django, PostgreSQL, Celery, Redis, Poetry, Docker Compose, Pytest, Swag
 > - `printer_id` — обязательное числовое значение
 > - `title` — уникальная строка, содержащая 4 цифры (например, "2031")
 > - `restaurant` — строка: group-A, group-B, ..., group-E
+![rec_gen](https://github.com/user-attachments/assets/805dba79-9dbf-42ba-a520-f93b4ea3c679)
+
 
 4. Использованные техники тест-дизайна:
 
